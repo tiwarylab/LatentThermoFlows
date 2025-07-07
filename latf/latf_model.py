@@ -594,6 +594,10 @@ class LaTF(torch.nn.Module):
         train_epoch_loss0 = 0
 
         while True:
+            
+            train_epoch_loss = 0
+            train_epoch_kl_loss = 0
+            train_epoch_reconstruction_error = 0
 
             for batch_inputs, batch_outputs, batch_weights, batch_temperatures in train_dataloader:
                 step += 1
@@ -611,6 +615,10 @@ class LaTF(torch.nn.Module):
                 loss.backward()
                 self._optimizer.step()
 
+                train_epoch_loss += loss.detach().cpu().data * len(batch_inputs)
+                train_epoch_kl_loss += kl_loss  * len(batch_inputs)
+                train_epoch_reconstruction_error += reconstruction_error * len(batch_inputs)
+
             epoch += 1
 
             scheduler.step()
@@ -620,14 +628,6 @@ class LaTF(torch.nn.Module):
 
             with torch.no_grad():
                 train_time = time.time() - start
-
-                train_epoch_loss = 0
-                train_epoch_kl_loss = 0
-                train_epoch_reconstruction_error = 0
-
-                train_epoch_loss += loss.detach().cpu().data * len(batch_inputs)
-                train_epoch_kl_loss += kl_loss  * len(batch_inputs)
-                train_epoch_reconstruction_error += reconstruction_error * len(batch_inputs)
 
                 self.train_loss_history += [[step, loss.detach().cpu().data.numpy()]]
 
@@ -641,7 +641,7 @@ class LaTF(torch.nn.Module):
                     "Reconstruction loss (train) %f" % (
                         epoch, train_time, train_epoch_loss, train_epoch_kl_loss, train_epoch_reconstruction_error))
                 print(
-                    "Epoch %i:\tTime %f s\nLoss (train) %f\tlikelihood loss (train): %f\t"
+                    "Epoch %i:\tTime %f s\nLoss (train) %f\tkl loss (train): %f\t"
                     "Reconstruction loss (train) %f" % (
                         epoch, train_time, train_epoch_loss, train_epoch_kl_loss,
                         train_epoch_reconstruction_error), file=open(log_path, 'a'))
@@ -670,7 +670,7 @@ class LaTF(torch.nn.Module):
                     "Reconstruction loss (test) %f" % (
                         test_epoch_loss, test_epoch_kl_loss, test_epoch_reconstruction_error))
                 print(
-                    "Loss (test) %f\kl loss (test): %f\t"
+                    "Loss (test) %f\tkl loss (test): %f\t"
                     "Reconstruction loss (test) %f" % (
                         test_epoch_loss, test_epoch_kl_loss, test_epoch_reconstruction_error), file=open(log_path, 'a'))
 
