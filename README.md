@@ -16,7 +16,7 @@ Two demonstration examples for training LaTF on the 2D three-hole model potentia
 ### Bibliography
 
 The preprint describing the Latent Thermodynamic Flows method is:
-* Yunrui Qiu, Richard John, Lukas Herron and Pratyush Tiwary, Latent Thermodynamic Flows: Unified Representation Learning and Generative Modeling of Temperature-Dependent Behaviors from Limited Data, arXiv (2025);
+* Yunrui Qiu, Richard John, Lukas Herron and Pratyush Tiwary, Latent Thermodynamic Flows: Unified Representation Learning and Generative Modeling of Temperature-Dependent Behaviors from Limited Data, arXiv (2025), https://arxiv.org/abs/2507.03174;
 
 SPIB: 
 * Dedi Wang and Pratyush Tiwary, State predictive information bottleneck, *J. Chem. Phys.* 154, 134111 (2021), https://doi.org/10.1063/5.0038198
