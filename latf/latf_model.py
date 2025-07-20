@@ -77,7 +77,6 @@ class LaTF(torch.nn.Module):
 
         self.u_dim = u_dim
         self.lagtime = lagtime
-        self.beta = beta
 
         self.learning_rate = learning_rate
         self.lr_scheduler_gamma = lr_scheduler_gamma
@@ -616,8 +615,8 @@ class LaTF(torch.nn.Module):
                 self._optimizer.step()
 
                 train_epoch_loss += loss.detach().cpu().data * len(batch_inputs)
-                train_epoch_kl_loss += kl_loss  * len(batch_inputs)
-                train_epoch_reconstruction_error += reconstruction_error * len(batch_inputs)
+                train_epoch_kl_loss += kl_loss.detach().cpu().data  * len(batch_inputs) * beta
+                train_epoch_reconstruction_error += reconstruction_error.detach().cpu().data * len(batch_inputs)
 
             epoch += 1
 
@@ -656,8 +655,8 @@ class LaTF(torch.nn.Module):
                     loss, reconstruction_error, kl_loss = self.calculate_loss(batch_inputs, batch_outputs, batch_weights, beta, batch_temperatures)
                     
                     weight_sum = batch_weights.sum().cpu()
-                    test_epoch_loss += loss.cpu().data * len(batch_inputs)
-                    test_epoch_kl_loss += kl_loss * len(batch_inputs)
+                    test_epoch_loss += loss.detach().cpu().data * len(batch_inputs)
+                    test_epoch_kl_loss += kl_loss.detach().cpu().data * len(batch_inputs) * beta
                     test_epoch_reconstruction_error += reconstruction_error * len(batch_inputs)
 
                 weight_sum = test_dataset.data_weights.sum().cpu()
