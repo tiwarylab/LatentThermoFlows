@@ -125,7 +125,7 @@ class LaTF(torch.nn.Module):
         else:
             self.encoder_mean = nn.Linear(np.prod(self.data_shape), self.u_dim).to(self.device)
 
-        self.encoder_logvar = nn.Parameter(torch.tensor([0.0]), requires_grad=True).to(self.device)
+        self.encoder_logvar = nn.Parameter(torch.tensor([0.0]), requires_grad=True)
 
         self.decoder = self._decoder_init()
 
